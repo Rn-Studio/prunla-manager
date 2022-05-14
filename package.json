@@ -1,0 +1,19 @@
+{
+  "name": "prunla-manager",
+  "version": "0.0.1-alpha.0",
+  "description": "Prunla Store's APP Manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rn-Studio/prunla-manager.git"
+  },
+  "author": "Rn Studio <studio@pai233.top>",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Rn-Studio/prunla-manager/issues"
+  },
+  "homepage": "https://github.com/Rn-Studio/prunla-manager#readme"
+}
