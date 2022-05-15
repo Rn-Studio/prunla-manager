@@ -33,6 +33,24 @@ const copyAPK = async (pkgName,version,apkPath) => {
 
 const writeSoftInfo = (pkgName, info) => {
     fs.writeFileSync(`${path.resolve(__dirname,'..')}/stores/softs/${pkgName}/info.json`,JSON.stringify(info))
+    let softList = {}
+    try {
+        softList = JSON.parse(fs.readFileSync(`${path.resolve(__dirname,'..')}/stores/all.json`,{
+            encoding: 'utf-8',
+            flag: 'r'
+        }))
+    } catch (error) {
+        softList = {
+            list: []
+        }
+    }
+    if((softList.list.find(e=>{return e.pkgName == info.pkgName})=== undefined)){
+        softList.list.push({
+            pkgName: info.pkgName,
+            name: info.name
+        })
+    }
+    fs.writeFileSync(`${path.resolve(__dirname,'..')}/stores/all.json`,JSON.stringify(softList))
 }
 
 const writeSortInfo = (softInfo, sort) => {

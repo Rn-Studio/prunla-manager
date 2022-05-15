@@ -17,9 +17,10 @@ const readSoft = (pkgName) => {
     } 
 }
 
-const mergeData = (old, upd, apkInfo) => {
+const mergeData = (old, upd, apkInfo, screenshots) => {
     let verList = (typeof old==="undefined")?[]:old.verList
-    
+    let screenshotsList = (typeof old==="undefined")?[]:old.screenshots
+
     if((verList.find(e=>{return e.ver === apkInfo.version}))===undefined){
         verList.push({
             ver: apkInfo.version,
@@ -33,6 +34,8 @@ const mergeData = (old, upd, apkInfo) => {
         return compare(a.ver, b.ver)
     })
 
+    screenshotsList.concat(screenshots)
+
     return {
         name: upd.name,
         date: Date.parse(new Date()),
@@ -43,7 +46,8 @@ const mergeData = (old, upd, apkInfo) => {
         info: upd.info,
         sort: upd.sort,
         verList: verList,
-        verCounter: verList.length
+        verCounter: verList.length,
+        screenshots: screenshotsList
     }
 }
 
@@ -115,16 +119,16 @@ const add = async args => {
         const softPath = `${path.resolve(__dirname,'..')}/stores/softs/${softInfo.pkgName}/`
         filesManager.mkdir(softPath)
         const screenshotsFilesName = await filesManager.copyFiles(screenshotsPath,`${softPath}/screenshots/`)
-        const newestSoftInfo = mergeData(storesInfo,ans,softInfo)
+        const newestSoftInfo = mergeData(storesInfo,ans,softInfo,screenshotsFilesName)
         filesManager.copyAPK(softInfo.pkgName,softInfo.version,apkPath)
         filesManager.writeSoftInfo(softInfo.pkgName,newestSoftInfo)
         filesManager.writeSortInfo({
-            name: softInfo.name,
+            name: ans.name,
             pkgName: softInfo.pkgName
         },ans.sort)
         if(ans.rnStudio){
             filesManager.writeSortInfo({
-                name: softInfo.name,
+                name: ans.name,
                 pkgName: softInfo.pkgName
             },"rnStudio")
         }
