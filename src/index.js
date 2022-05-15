@@ -5,12 +5,12 @@ const init = require('./init').init
 const add = require('./add').add
 const chalk = require('chalk')
 
-const run = () => {
+const run = async () => {
     init()
     try {
         switch(args[0]) {
             case 'add':
-                add(args.slice(1))
+                await add(args.slice(1))
                 break;  
             default:
                 break;
