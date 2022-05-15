@@ -17,7 +17,7 @@ const readSoft = (pkgName) => {
     } 
 }
 
-const mergeData = (old, upd, apkInfo, screenshots) => {
+const mergeData = (old, upd, apkInfo, screenshots, iconName) => {
     let verList = (typeof old==="undefined")?[]:old.verList
     let screenshotsList = (typeof old==="undefined")?[]:old.screenshots
 
@@ -47,7 +47,8 @@ const mergeData = (old, upd, apkInfo, screenshots) => {
         sort: upd.sort,
         verList: verList,
         verCounter: verList.length,
-        screenshots: screenshotsList
+        screenshots: screenshotsList,
+        icon: iconName
     }
 }
 
@@ -119,7 +120,8 @@ const add = async args => {
         const softPath = `${path.resolve(__dirname,'..')}/stores/softs/${softInfo.pkgName}/`
         filesManager.mkdir(softPath)
         const screenshotsFilesName = await filesManager.copyFiles(screenshotsPath,`${softPath}/screenshots/`)
-        const newestSoftInfo = mergeData(storesInfo,ans,softInfo,screenshotsFilesName)
+        const iconName = getApkInfo.unzipIcon(apkPath,softInfo.pkgName,softInfo.iconPath)
+        const newestSoftInfo = mergeData(storesInfo,ans,softInfo,screenshotsFilesName, iconName)
         filesManager.copyAPK(softInfo.pkgName,softInfo.version,apkPath)
         filesManager.writeSoftInfo(softInfo.pkgName,newestSoftInfo)
         filesManager.writeSortInfo({
