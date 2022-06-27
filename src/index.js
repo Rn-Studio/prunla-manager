@@ -7,6 +7,7 @@ const chalk = require('chalk')
 const { remove } = require('./remove')
 const { recover } = require('./recover')
 const { setRepo } = require('./setRepo')
+const { pull, push } = require('./sync')
 
 const run = async () => {
     init()
@@ -27,7 +28,13 @@ const run = async () => {
                 break;
             case 'setrepo':
                 setRepo(args.slice(1)[0]) 
-                break;           
+                break;  
+            case 'pull':
+                pull()
+                break;
+            case 'push':
+                push()
+                break;                 
             default:
                 break;
         }
