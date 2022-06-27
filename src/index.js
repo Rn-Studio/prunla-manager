@@ -11,7 +11,9 @@ const { setRepo } = require('./setRepo')
 const run = async () => {
     init()
     try {
-        switch(args[0].toLocaleLowerCase()) {
+        let cmd = args[0]
+        if(cmd) cmd = cmd.toLocaleLowerCase()
+        switch(cmd) {
             case 'add':
                 await add(args.slice(1))
                 break;
