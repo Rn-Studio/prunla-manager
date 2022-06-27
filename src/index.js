@@ -6,11 +6,12 @@ const add = require('./add').add
 const chalk = require('chalk')
 const { remove } = require('./remove')
 const { recover } = require('./recover')
+const { setRepo } = require('./setRepo')
 
 const run = async () => {
     init()
     try {
-        switch(args[0]) {
+        switch(args[0].toLocaleLowerCase()) {
             case 'add':
                 await add(args.slice(1))
                 break;
@@ -21,7 +22,10 @@ const run = async () => {
             case 'recover':
             case 'rc':
                 recover(args.slice(1)[0]) 
-                break;        
+                break;
+            case 'setrepo':
+                setRepo(args.slice(1)[0]) 
+                break;           
             default:
                 break;
         }
