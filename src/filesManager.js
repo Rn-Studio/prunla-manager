@@ -24,6 +24,10 @@ const copyFiles = async (files,dir) => {
     return arr
 }
 
+const getFileSize = async (filePath) => {
+    return fs.statSync(path.format(filePath)).size
+}
+
 const copyAPK = async (pkgName,version,apkPath) => {
     const oldApkPath = path.format(apkPath)
     const apkDir = `${path.resolve(__dirname,'..')}/stores/softs/${pkgName}/apk/`
@@ -47,7 +51,9 @@ const writeSoftInfo = (pkgName, info) => {
     if((softList.list.find(e=>{return e.pkgName == info.pkgName})=== undefined)){
         softList.list.push({
             pkgName: info.pkgName,
-            name: info.name
+            name: info.name,
+            icon: info.icon,
+            author: info.author
         })
     }
     fs.writeFileSync(`${path.resolve(__dirname,'..')}/stores/all.json`,JSON.stringify(softList))
@@ -77,5 +83,6 @@ module.exports = {
     copyFiles,
     copyAPK,
     writeSoftInfo,
-    writeSortInfo
+    writeSortInfo,
+    getFileSize
 }

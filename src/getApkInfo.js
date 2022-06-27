@@ -11,7 +11,7 @@ const runAapt = (apkPath) => {
                     path.format(apkPath)
                 ])
     if(info.stderr.toString() != "") {
-        console.error(info.stderr)
+        console.error(info.stderr.toString())
         throw Error('GET APK Info Failed')
     }
     return info.stdout.toString()            
@@ -23,10 +23,13 @@ const checkInfo = (out) => {
         const pkgName = packageNameRegEx.exec(out)[1]
         const softNameRegEx = new RegExp(/application\-label\:\'(.*)\'/g)
         const softName = softNameRegEx.exec(out)[1]
-        const versionRegEx = new RegExp(/versionName=\'(.*)\'/g)
-        const version = versionRegEx.exec(out)[1]
-        const iconPathRegEx = new RegExp(/application-icon-120:\'(.*)\'/g) 
-        const iconPath = iconPathRegEx.exec(out)[1]
+        const versionRegEx = new RegExp(/(([0-9]|([1-9]([0-9]*))).){2}([0-9]|([1-9]([0-9]*)))/g)
+        const version = versionRegEx.exec(out)[0]
+        const iconPathRegEx = new RegExp(/application-icon-160:\'(.*)\'/g) 
+        let iconPath = iconPathRegEx.exec(out)[1]
+        if(path.parse(iconPath).ext==".xml"){
+            iconPath = "res/mipmap-hdpi-v4/ic_launcher.png"
+        }
         return {
             pkgName: pkgName,
             name: softName,
@@ -34,6 +37,7 @@ const checkInfo = (out) => {
             iconPath: iconPath
         }
     } catch (error) {
+        console.log(out)
         throw error
     }
 }
