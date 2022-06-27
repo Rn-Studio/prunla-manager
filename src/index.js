@@ -5,6 +5,7 @@ const init = require('./init').init
 const add = require('./add').add
 const chalk = require('chalk')
 const { remove } = require('./remove')
+const { recover } = require('./recover')
 
 const run = async () => {
     init()
@@ -14,8 +15,13 @@ const run = async () => {
                 await add(args.slice(1))
                 break;
             case 'remove':
-                await remove(args.slice(1)[0])  
-                break;  
+            case 'rm':    
+                remove(args.slice(1)[0])  
+                break;
+            case 'recover':
+            case 'rc':
+                recover(args.slice(1)[0]) 
+                break;        
             default:
                 break;
         }
