@@ -66,7 +66,7 @@ const add = async args => {
     }
     const softInfo = getApkInfo.getInfo(apkPath)
     const storesInfo = readSoft(softInfo.pkgName)
-    const apkSize = filesManager.getFileSize(apkPath)
+    const apkSize = await filesManager.getFileSize(apkPath)
     inquirer.prompt([{
         type: "input",
         message: "The Name of APP:",

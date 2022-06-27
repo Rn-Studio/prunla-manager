@@ -12,6 +12,8 @@ const checkDir = () => { // 检查目录是否存在
     filesManager.mkdir(storesPath)
     const softsPath = `${storesPath}/softs/`
     filesManager.mkdir(softsPath)
+    const unpublishedPath = `${storesPath}/unpublished/`
+    filesManager.mkdir(unpublishedPath)
 }
 
 const init = () => {

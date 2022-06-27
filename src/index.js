@@ -4,6 +4,7 @@ const args = process.argv.slice(2)
 const init = require('./init').init
 const add = require('./add').add
 const chalk = require('chalk')
+const { remove } = require('./remove')
 
 const run = async () => {
     init()
@@ -11,6 +12,9 @@ const run = async () => {
         switch(args[0]) {
             case 'add':
                 await add(args.slice(1))
+                break;
+            case 'remove':
+                await remove(args.slice(1)[0])  
                 break;  
             default:
                 break;
