@@ -51,7 +51,8 @@ const mergeData = (old, upd, apkInfo, screenshots, iconName, apkSize) => {
         fileSize: apkSize,
         supportList: upd.supportList.split('|'),
         unsupportList: upd.unsupportList.split('|'),
-        ad: upd.ad
+        ad: upd.ad,
+        os: upd.os
     }
 }
 
@@ -125,6 +126,12 @@ const add = async args => {
         message: "Input the Unsupport Devices' Name, Splitted by \"|\"",
         name: "unsupportList",
         default: storesInfo?storesInfo.unsupportList.join('|'):"None"
+    },{
+        type: "list",
+        message: "Supported OS:",
+        name: "os",
+        default: storesInfo?storesInfo.os:"NULL",
+        choices: ["Android","Wear OS","Both"]
     },{
         type: "confirm",
         message: "Published by Rn Studio?",
