@@ -3,6 +3,7 @@ const inquirer = require('inquirer')
 const path = require('path')
 const getApkInfo = require('./getApkInfo')
 const chalk = require('chalk')
+const time = require('silly-datetime')
 const filesManager = require('./filesManager')
 const { compare } = require('./version')
 
@@ -24,7 +25,7 @@ const mergeData = (old, upd, apkInfo, screenshots, iconName, apkSize) => {
     if((verList.find(e=>{return e.ver === apkInfo.version}))===undefined){
         verList.push({
             ver: apkInfo.version,
-            updDate: Date.parse(new Date())
+            updDate: time.format(new Date(),"YYYY-MM-DD")
         })
     } else {
         throw Error("This APP of the same version has already exists.")
