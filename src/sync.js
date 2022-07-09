@@ -33,7 +33,7 @@ const push = () => {
         stdio: "inherit"
     })
     spawn("git",[
-        "push",repo,"main"
+        "push","-u",repo,"main"
     ],{
         cwd: storesPath,
         stdio: "inherit"

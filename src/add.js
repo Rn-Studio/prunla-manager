@@ -149,14 +149,16 @@ const add = async args => {
             name: ans.name,
             pkgName: softInfo.pkgName,
             icon: iconName,
-            author: ans.author
+            author: ans.author,
+            time: new Date().getTime()
         },ans.sort)
         if(ans.rnStudio){
             filesManager.writeSortInfo({
                 name: ans.name,
                 pkgName: softInfo.pkgName,
                 icon: iconName,
-                author: ans.author
+                author: ans.author,
+                time: new Date().getTime()
             },"rnStudio")
         }
     })

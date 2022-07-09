@@ -16,6 +16,7 @@ const checkDir = () => { // 检查目录是否存在
     filesManager.mkdir(softsPath)
     const unpublishedPath = `${storesPath}/unpublished/`
     filesManager.mkdir(unpublishedPath)
+    fs.writeFileSync(`${storesPath}/index.html`,"PRUNLA STORE")
 }
 
 const checkRepo = () => {

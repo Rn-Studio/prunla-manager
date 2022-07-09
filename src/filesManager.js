@@ -48,13 +48,23 @@ const writeSoftInfo = (pkgName, info) => {
             list: []
         }
     }
-    if((softList.list.find(e=>{return e.pkgName == info.pkgName})=== undefined)){
+    let list_find = softList.list.findIndex(e=>{return e.pkgName == info.pkgName})
+    if(list_find===-1){
         softList.list.push({
             pkgName: info.pkgName,
             name: info.name,
             icon: info.icon,
-            author: info.author
+            author: info.author,
+            time: new Date().getTime()
         })
+    } else {
+        softList.list[list_find] = {
+            pkgName: info.pkgName,
+            name: info.name,
+            icon: info.icon,
+            author: info.author,
+            time: new Date().getTime()
+        }
     }
     fs.writeFileSync(`${path.resolve(__dirname,'..')}/stores/all.json`,JSON.stringify(softList))
 }
@@ -71,8 +81,11 @@ const writeSortInfo = (softInfo, sort) => {
             list: []
         }
     }
-    if((sortList.list.find(e=>{return e.pkgName == softInfo.pkgName})=== undefined)){
+    let list_find = sortList.list.findIndex(e=>{return e.pkgName == softInfo.pkgName})
+    if(list_find === -1) {
         sortList.list.push(softInfo)
+    } else {
+        sortList.list[list_find] = softInfo
     }
     fs.writeFileSync(`${path.resolve(__dirname,'..')}/stores/${sort}.json`,JSON.stringify(sortList))
 }
