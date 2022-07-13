@@ -36,7 +36,8 @@ const copyAPK = async (pkgName,version,apkPath) => {
 }
 
 const writeSoftInfo = (pkgName, info) => {
-    fs.writeFileSync(`${path.resolve(__dirname,'..')}/stores/softs/${pkgName}/info.json`,JSON.stringify(info))
+    fs.writeFileSync(`${path.resolve(__dirname,'..')}/stores/softs/${pkgName}/info.json`,JSON.stringify(info.info))
+    fs.writeFileSync(`${path.resolve(__dirname,'..')}/stores/softs/${pkgName}/version.json`,JSON.stringify(info.verList))
     let softList = {}
     try {
         softList = JSON.parse(fs.readFileSync(`${path.resolve(__dirname,'..')}/stores/all.json`,{
@@ -44,26 +45,24 @@ const writeSoftInfo = (pkgName, info) => {
             flag: 'r'
         }))
     } catch (error) {
-        softList = {
-            list: []
-        }
+        softList = []
     }
-    let list_find = softList.list.findIndex(e=>{return e.pkgName == info.pkgName})
+    let list_find = softList.findIndex(e=>{return e.pkgName == info.info.pkgName})
     if(list_find===-1){
-        softList.list.push({
-            pkgName: info.pkgName,
-            name: info.name,
-            icon: info.icon,
-            author: info.author,
-            time: new Date().getTime()
+        softList.push({
+            pkgName: info.info.pkgName,
+            softName: info.info.name,
+            softIcon: info.info.icon,
+            softAuthor: info.author,
+            updatedTime: new Date().getTime()
         })
     } else {
-        softList.list[list_find] = {
-            pkgName: info.pkgName,
-            name: info.name,
-            icon: info.icon,
-            author: info.author,
-            time: new Date().getTime()
+        softList[list_find] = {
+            pkgName: info.info.pkgName,
+            softName: info.info.name,
+            softIcon: info.info.icon,
+            softAuthor: info.info.author,
+            updatedTime: new Date().getTime()
         }
     }
     fs.writeFileSync(`${path.resolve(__dirname,'..')}/stores/all.json`,JSON.stringify(softList))
@@ -77,15 +76,13 @@ const writeSortInfo = (softInfo, sort) => {
             flag: 'r'
         }))
     } catch (error) {
-        sortList = {
-            list: []
-        }
+        sortList = []
     }
-    let list_find = sortList.list.findIndex(e=>{return e.pkgName == softInfo.pkgName})
+    let list_find = sortList.findIndex(e=>{return e.pkgName == softInfo.pkgName})
     if(list_find === -1) {
-        sortList.list.push(softInfo)
+        sortList.push(softInfo)
     } else {
-        sortList.list[list_find] = softInfo
+        sortList[list_find] = softInfo
     }
     fs.writeFileSync(`${path.resolve(__dirname,'..')}/stores/${sort}.json`,JSON.stringify(sortList))
 }

@@ -1,6 +1,6 @@
 {
   "name": "prunla-manager",
-  "version": "0.0.1-alpha.5",
+  "version": "0.0.1-beta.2",
   "description": "Prunla Store's APP Manager",
   "main": "./src/index.js",
   "scripts": {

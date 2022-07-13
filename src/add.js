@@ -1,4 +1,5 @@
 // 第三方依赖
+const fs = require('fs-extra')
 const inquirer = require('inquirer')
 const path = require('path')
 const getApkInfo = require('./getApkInfo')
@@ -6,6 +7,7 @@ const chalk = require('chalk')
 const time = require('silly-datetime')
 const filesManager = require('./filesManager')
 const { compare } = require('./version')
+
 
 const readSoft = (pkgName) => {
     try {
@@ -18,8 +20,16 @@ const readSoft = (pkgName) => {
     } 
 }
 
-const mergeData = (old, upd, apkInfo, screenshots, iconName, apkSize) => {
-    let verList = (typeof old==="undefined")?[]:old.verList
+const mergeData = async (old, upd, apkInfo, screenshots, iconName, apkSize) => {
+    let verList = {}
+    try {
+        verList = JSON.parse(fs.readFileSync(`${path.resolve(__dirname,'..')}/stores/softs/${apkInfo.pkgName}/version.json`,{
+            encoding: 'utf-8',
+            flag: 'r'
+        }))
+    } catch (error) {
+        verList = []
+    }
     let screenshotsList = (typeof old==="undefined")?[]:old.screenshots
 
     if((verList.find(e=>{return e.ver === apkInfo.version}))===undefined){
@@ -31,29 +41,32 @@ const mergeData = (old, upd, apkInfo, screenshots, iconName, apkSize) => {
         throw Error("This APP of the same version has already exists.")
     }
 
-    verList.sort((a, b) => {
+    verList = await verList.sort((a, b) => {
         return compare(a.ver, b.ver)
     })
 
     screenshotsList.concat(screenshots)
 
+    let newestVer = await compare(((typeof old==="undefined")?"0.0.0":old.newestVer), apkInfo.version)===1?old.newestVer:apkInfo.version
     return {
-        name: upd.name,
-        date: Date.parse(new Date()),
-        pkgName: apkInfo.pkgName,
-        author: upd.author,
-        newestVer: compare(((typeof old==="undefined")?"0.0.0":old.newestVer), apkInfo.version)===-1?old.newestVer:apkInfo.version,
-        descr: upd.descr,
-        sort: upd.sort,
-        verList: verList,
-        verCounter: verList.length,
-        screenshots: screenshotsList,
-        icon: iconName,
-        fileSize: apkSize,
-        supportList: upd.supportList.split('|'),
-        unsupportList: upd.unsupportList.split('|'),
-        ad: upd.ad,
-        os: upd.os
+        info: {
+            name: upd.name,
+            date: Date.parse(new Date()),
+            pkgName: apkInfo.pkgName,
+            author: upd.author,
+            newestVer: newestVer,
+            descr: upd.descr,
+            sort: upd.sort,
+            verCounter: verList.length,
+            screenshots: screenshotsList,
+            icon: iconName,
+            fileSize: apkSize,
+            supportList: upd.supportList.split('|'),
+            unsupportList: upd.unsupportList.split('|'),
+            ad: upd.ad,
+            os: upd.os
+        },
+        verList: verList
     }
 }
 
@@ -92,27 +105,27 @@ const add = async args => {
         type: "list",
         message: "The Sort of APP:",
         name: "sort",
-        default: storesInfo?storesInfo.sort:"NULL",
+        default: storesInfo?storesInfo.sort.toLocaleUpperCase():"NULL",
         choices: [
-            "Others",
-            "Faces",
-            "Games",
-            "Sports",
-            "Chats",
-            "Works",
-            "News",
-            "Maps",
-            "Traveling",
-            "Banking",
-            "Images",
-            "Files",
-            "Broswers",
+            "OTHERS",
+            "FACES",
+            "GAMES",
+            "SPORTS",
+            "CHATS",
+            "WORKS",
+            "NEWS",
+            "MAPS",
+            "TRAVELING",
+            "BANKING",
+            "IMAGES",
+            "FILES",
+            "BROSWERS",
             "IME",
-            "Music",
-            "Video",
-            "Weather",
-            "Themes",
-            "Home"
+            "MUSIC",
+            "VIDEO",
+            "WEATHER",
+            "THEMES",
+            "HOME"
         ],
         filter: (ans) => {
             return ans.toLocaleLowerCase()
@@ -142,23 +155,23 @@ const add = async args => {
         filesManager.mkdir(softPath)
         const screenshotsFilesName = await filesManager.copyFiles(screenshotsPath,`${softPath}/screenshots/`)
         const iconName = getApkInfo.unzipIcon(apkPath,softInfo.pkgName,softInfo.iconPath)
-        const newestSoftInfo = mergeData(storesInfo,ans,softInfo,screenshotsFilesName, iconName, apkSize)
+        const newestSoftInfo = await mergeData(storesInfo,ans,softInfo,screenshotsFilesName, iconName, apkSize)
         filesManager.copyAPK(softInfo.pkgName,softInfo.version,apkPath)
         filesManager.writeSoftInfo(softInfo.pkgName,newestSoftInfo)
         filesManager.writeSortInfo({
-            name: ans.name,
+            softName: ans.name,
             pkgName: softInfo.pkgName,
-            icon: iconName,
-            author: ans.author,
-            time: new Date().getTime()
+            softIcon: iconName,
+            softAuthor: ans.author,
+            updatedTime: new Date().getTime()
         },ans.sort)
         if(ans.rnStudio){
             filesManager.writeSortInfo({
-                name: ans.name,
+                softName: ans.name,
                 pkgName: softInfo.pkgName,
-                icon: iconName,
-                author: ans.author,
-                time: new Date().getTime()
+                softIcon: iconName,
+                softAuthor: ans.author,
+                updatedTime: new Date().getTime()
             },"rnStudio")
         }
     })
